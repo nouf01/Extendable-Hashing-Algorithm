@@ -16,7 +16,16 @@ public class DatabaseProj {
        t1.addKeys(10,true);
        t1.addKeys(30,true);
        t1.addKeys(15,true);
+       t1.addKeys(35,true);
+       t1.addKeys(7,true);
+       t1.addKeys(26,true);
+       t1.addKeys(18,true);
+       //System.out.println("*************************************");
        t1.printHash();
+       //System.out.println("*************************************");
+      // t1.printBuckets();
+       //t1.printHashInsta();
+       t1.printKeys();
        
     }
     
