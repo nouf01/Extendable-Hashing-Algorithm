@@ -98,7 +98,7 @@ public class HashTable {
                 if (subHash.equals(str)) {
                     System.out.println("linked");
                     curH.setBucket(i);
-                    break;
+                    //break;
                 }
             }
         }
@@ -252,17 +252,60 @@ public class HashTable {
         return value.concat(x);
     }
     
-    public void printHash(){
+    public void printHash() {
         System.out.println("_____________________________________");
         System.out.println("printHash");
-        for(int h =0; h<hashList.size(); h++){
+        LinkedList<String> pointToB = new LinkedList<String>();
+        for (int h = 0; h < hashList.size(); h++) {
             Hash_Instance h1 = hashList.get(h);
+            pointToB.add(h1.getValue());
             Bucket b1 = bucketsList.get(h1.getBucket());
-            System.out.println(h1.getValue() + " points to " +b1.value + " Keys: ");
-            for(int k =0; k<b1.bucketKeys.size(); k++){
-                System.out.print(b1.bucketKeys.get(k) + " " );
+            if (h != (hashList.size() - 1) && h1.getBucket() != hashList.get(h + 1).getBucket()) {
+                System.out.println("");
+                for (int p = 0; p < pointToB.size(); p++) {
+                    System.out.print(" " + pointToB.get(p));
+                }
+                System.out.print(" points to " + b1.value + " Keys: ");
+                System.out.println("");
+                for (int k = 0; k < b1.bucketKeys.size(); k++) {
+                    System.out.print(b1.bucketKeys.get(k) + " ");
+                }
+                pointToB.clear();
+                System.out.println("");
+            } else if (h == hashList.size() - 1) {
+                System.out.println("");
+                for (int p = 0; p < pointToB.size(); p++) {
+                    System.out.print(" " + pointToB.get(p));
+                }
+                System.out.print(" points to " + b1.value + " Keys: ");
+                System.out.println("");
+                for (int k = 0; k < b1.bucketKeys.size(); k++) {
+                    System.out.print(b1.bucketKeys.get(k) + " ");
+                }
+                pointToB.clear();
+                System.out.println("");
             }
-            System.out.println("");
+        }
+    }
+    public void printTable(){
+        System.out.println("_____________________________________");
+        System.out.println("printTable");
+        for(int b =0; b<bucketsList.size(); b++){
+            Bucket curBuck = bucketsList.get(b);
+            LinkedList<String> pointToB = new LinkedList<String>();
+            for(int h =0; h<hashList.size(); h++){
+                String pointer = bucketsList.get(hashList.get(h).getBucket()).value;
+                if(pointer.equals(curBuck.value)){
+                    pointToB.add(hashList.get(h).getValue());
+                }
+            }
+            for(int p=0; p<pointToB.size(); p++){
+                System.out.print(" "+pointToB.get(p));
+            }
+            System.out.println(" points to " +curBuck.value + " Keys: ");
+            for(int k =0; k<curBuck.bucketKeys.size(); k++){
+                System.out.print(curBuck.bucketKeys.get(k) + " " );
+            }
         }
     }
     
