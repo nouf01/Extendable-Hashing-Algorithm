@@ -331,4 +331,22 @@ public class HashTable {
         System.out.println("Key is not found ");
         return false;
     }
+    public boolean deleteKey(int key) {
+        System.out.println("delete() ");
+        String hashValue = hash(key);
+        String subHash = hashValue.substring(0, globalD);
+        //System.out.println("Key "+key +" Hash Rep: " +hashValue +" Sub key rep "+subHash);
+        for (int i = 0; i < hashList.size(); i++) {
+            Hash_Instance hObject = hashList.get(i);
+            if (subHash.equals(hObject.getValue())) {
+                //System.out.println("is equal to hash value : " +hObject.getValue());
+                int index = hObject.getBucket(); //return index of the bucket where overflow happened
+                Bucket buc = bucketsList.get(index); //use the index to get bucket obj from buckList
+                LinkedList<Integer> keys = buc.bucketKeys;
+                buc.remove(key);
+            }
+        }
+        System.out.println("Key is not found ");
+        return false;
+    }
 }

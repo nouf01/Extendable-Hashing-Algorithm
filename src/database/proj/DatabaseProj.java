@@ -20,9 +20,13 @@ public class DatabaseProj {
        t1.addKeys(7,true);
        t1.addKeys(26,true);
        t1.addKeys(18,true);
+       t1.addKeys(22,true);
+       t1.addKeys(5,true);
+       t1.addKeys(42,true);
+       t1.addKeys(13,true);
        //System.out.println("*************************************");
        t1.printHash();
-       t1.lookUp(26);
+       //t1.lookUp(26);
        //System.out.println("*************************************");
       // t1.printBuckets();
        //t1.printHashInsta();
