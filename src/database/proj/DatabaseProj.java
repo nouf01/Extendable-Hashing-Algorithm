@@ -22,10 +22,11 @@ public class DatabaseProj {
        t1.addKeys(18,true);
        //System.out.println("*************************************");
        t1.printHash();
+       t1.lookUp(26);
        //System.out.println("*************************************");
       // t1.printBuckets();
        //t1.printHashInsta();
-       t1.printKeys();
+      // t1.printKeys();
        
     }
     
