@@ -15,6 +15,7 @@ public class Bucket {
     int localDepth;
     LinkedList<Integer> bucketKeys;
     int numKeys;
+
     String value;
     int size;
 
@@ -27,7 +28,7 @@ public class Bucket {
     }
     
     public boolean isFull(){
-        return numKeys == size;
+        return bucketKeys.size() == size;
     }
     
     public void add(int newKey){
@@ -37,11 +38,15 @@ public class Bucket {
     }
     
     public void remove(int newKey){
-        for(int i =0; i<numKeys; i++){
+        for(int i =0; i<bucketKeys.size(); i++){
             if (newKey == bucketKeys.get(i)){
                 bucketKeys.remove(i);
+                numKeys--;
             }
         }
-        numKeys--;
+    }
+    
+    public void setValue(String value) {
+        this.value = value;
     }
 }

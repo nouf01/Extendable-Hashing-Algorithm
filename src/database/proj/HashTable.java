@@ -225,6 +225,7 @@ public class HashTable {
             linkBucketToHash();
         }
         ReAdd(keys);
+        keyList.add(key);
         /*for (int j = 0; j < keys.size(); j++) {
             String hashValue2 = hash(keys.get(j));
             String subHash2 = hashValue2.substring(0, olddepth + 1);
@@ -246,7 +247,7 @@ public class HashTable {
         //return key % 10;
         String x = Integer.toBinaryString(key);
         String value = ""; //1100000
-        for (int i = 0; i < 6-x.length(); i++) {
+        for (int i = 0; i < 8-x.length(); i++) {
             value += "0";
         }
         return value.concat(x);
@@ -322,7 +323,7 @@ public class HashTable {
                 LinkedList<Integer> keys = buc.bucketKeys;
                 for (int k = 0; k < keys.size(); k++) {
                     if (keys.get(k) == key) {
-                        System.out.println("Key " +key +" Found in Bucket: "+buc.value);
+                        System.out.println("Key " +key +"Found in Hash "+hObject.getValue()+" which points Bucket: "+buc.value);
                         return true;
                     }
                 }
@@ -332,21 +333,80 @@ public class HashTable {
         return false;
     }
     public boolean deleteKey(int key) {
-        System.out.println("delete() ");
+        System.out.println("delete( ");
+        boolean found = false;
+        int whereInKeyList = 0;
+        for (int i = 0; i < keyList.size(); i++) {//check if it even exists
+            if (key == keyList.get(i)) {
+                System.out.println(key + " does actually Exist");
+                whereInKeyList = i;
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("this key does not exist");
+            return false;
+
+        }
         String hashValue = hash(key);
         String subHash = hashValue.substring(0, globalD);
-        //System.out.println("Key "+key +" Hash Rep: " +hashValue +" Sub key rep "+subHash);
+        System.out.println("Key "+key +" Hash Rep: " +hashValue +" Sub key rep "+subHash);
+        boolean buddyFound = false;
         for (int i = 0; i < hashList.size(); i++) {
             Hash_Instance hObject = hashList.get(i);
             if (subHash.equals(hObject.getValue())) {
-                //System.out.println("is equal to hash value : " +hObject.getValue());
+                System.out.println("is equal to hash value : " +hObject.getValue());
                 int index = hObject.getBucket(); //return index of the bucket where overflow happened
                 Bucket buc = bucketsList.get(index); //use the index to get bucket obj from buckList
                 LinkedList<Integer> keys = buc.bucketKeys;
-                buc.remove(key);
+                for (int k = 0; k < keys.size(); k++) {
+                    if (keys.get(k) == key) {
+                        System.out.println("Key " +key +" Found in Bucket: "+buc.value);
+                        buc.remove(key);
+                        keyList.remove(whereInKeyList);
+                        break;
+                    }
+                }
+                System.out.println("After Break");
+                if(keys.isEmpty()){
+                    int numOfBit = buc.localDepth - 1;
+                    String bucValue = buc.value;
+                    String subBuck = bucValue.substring(0, numOfBit);
+                    for (int s = 0; s < hashList.size(); s++){// to find buddy bucket
+                        Hash_Instance h = hashList.get(s);
+                        String hashTableVal =  h.getValue();
+                        String subVal = hashTableVal.substring(0, numOfBit);
+                        if(subBuck.equals(subVal) && ! hashTableVal.equals( bucValue)){
+                            Bucket hashBuck = bucketsList.get(h.getBucket());
+                            if(hashBuck.localDepth == buc.localDepth && bucketsList.size()!= 2 ){
+                                hashBuck.localDepth--;
+                                String subVal2 = hashTableVal.substring(0, hashBuck.localDepth);
+                                hashBuck.setValue(subVal2);
+                                bucketsList.remove(index);
+                                linkBucketToHash();
+                                hObject.setBucket(h.getBucket());
+                                buddyFound = true;
+                            }
+                        }
+                    }
+                }
             }
         }
-        System.out.println("Key is not found ");
-        return false;
+        if(buddyFound && hashList.size()!= 2 ){
+            
+            boolean equalFound = false;
+            for(int r =0; r<bucketsList.size(); r++){
+                Bucket curBuck = bucketsList.get(r);
+                if(curBuck.localDepth == globalD){
+                    equalFound = true;
+                }
+            }
+            if(!equalFound && hashList.size()!= 2){
+                globalD--;
+                constructHash(globalD);
+            }
+        }
+        
+        return true;
     }
 }
