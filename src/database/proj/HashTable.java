@@ -215,11 +215,13 @@ public class HashTable {
         Bucket b2 = new Bucket(olddepth + 1, BucketSize, oldValue + "1");
         bucketsList.add(b1);
         bucketsList.add(b2);
-        if (globalD == (olddepth)) {
+        if (globalD == (olddepth) && globalD < 8) {
             int oldGlobal = globalD;
             globalD++;
             constructHash(globalD);
             System.out.println("Global Depth Updated from "+oldGlobal +" to "+globalD);
+        }else if(globalD == 8){
+            System.out.println("Cant expand more than 8");
         }
         else{
             linkBucketToHash();
@@ -288,6 +290,45 @@ public class HashTable {
             }
         }
     }
+    public String output() {
+        String output = new String();
+        output = output.concat("\n__________________________________________");
+        output = output.concat("\n_________________ OutPut __________________");
+        output = output.concat("\n Global Depth is: "+globalD);
+        //System.out.println("printHash");
+        LinkedList<String> pointToB = new LinkedList<String>();
+        for (int h = 0; h < hashList.size(); h++) {
+            Hash_Instance h1 = hashList.get(h);
+            pointToB.add(h1.getValue());
+            Bucket b1 = bucketsList.get(h1.getBucket());
+            if (h != (hashList.size() - 1) && h1.getBucket() != hashList.get(h + 1).getBucket()) {
+                output = output.concat("\n");
+                for (int p = 0; p < pointToB.size(); p++) {
+                    output = output.concat(" " + pointToB.get(p));
+                }
+                output = output.concat(" points to " + b1.value + " Keys: ");
+                output = output.concat("\n");
+                for (int k = 0; k < b1.bucketKeys.size(); k++) {
+                    output = output.concat(b1.bucketKeys.get(k) + " ");
+                }
+                pointToB.clear();
+                output = output.concat("\n");
+            } else if (h == hashList.size() - 1) {
+                output = output.concat("\n");
+                for (int p = 0; p < pointToB.size(); p++) {
+                    output = output.concat(" " + pointToB.get(p));
+                }
+                output = output.concat(" points to " + b1.value + " Keys: ");
+                output = output.concat("\n");
+                for (int k = 0; k < b1.bucketKeys.size(); k++) {
+                    output = output.concat(b1.bucketKeys.get(k) + " ");
+                }
+                pointToB.clear();
+                output = output.concat("\n");
+            }
+        }
+        return output;
+    }
     public void printTable(){
         System.out.println("_____________________________________");
         System.out.println("printTable");
@@ -309,7 +350,7 @@ public class HashTable {
             }
         }
     }
-    public boolean lookUp(int key) {
+    public String lookUp(int key) {
         System.out.println("lookUp() ");
         String hashValue = hash(key);
         String subHash = hashValue.substring(0, globalD);
@@ -323,14 +364,12 @@ public class HashTable {
                 LinkedList<Integer> keys = buc.bucketKeys;
                 for (int k = 0; k < keys.size(); k++) {
                     if (keys.get(k) == key) {
-                        System.out.println("Key " +key +"Found in Hash "+hObject.getValue()+" which points Bucket: "+buc.value);
-                        return true;
+                        return "Key " +key +" Found in Hash "+hObject.getValue()+" which points Bucket: "+buc.value;
                     }
                 }
             }
         }
-        System.out.println("Key is not found ");
-        return false;
+        return"Key is not found ";
     }
     public boolean deleteKey(int key) {
         System.out.println("delete( ");
